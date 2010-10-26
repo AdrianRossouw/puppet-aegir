@@ -57,13 +57,13 @@ class aegir::http {
   }
 
   exec { "enable mod rewrite" :
-    command => "a2enmod rewrite"
+    command => "/usr/sbin/a2enmod rewrite"
   }
 
   if $apache_ssl {
-		exec { "enable apache openssl" :
-			command => "a2enmod ssl",
-		}
+    exec { "enable apache openssl" :
+      command => "/user/sbin/a2enmod ssl",
+    }
     $service_type = 'apache_ssl'
 
   	if $aegir_host == $fqdn {
