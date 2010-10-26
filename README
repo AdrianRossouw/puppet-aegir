@@ -9,6 +9,11 @@ This only works on ubuntu (afaik) and depends on the line.pp from puppet-common.
 You need to set up exported resources on your puppet master, preferably with mysql
 as a back end.
 
+Check this repository into /etc/puppet/modules as 'aegir'.
+
+  cd /etc/puppet/modules
+  git clone git@github.com:Vertice/puppet-aegir.git aegir
+
 USAGE:
 ------
 
@@ -115,3 +120,4 @@ What isn't working?
  * Only supports Aegir HEAD atm because it needs the hosting-import command to add the servers
    to the front end.
  * Indentation is atrocious due to me editing this on remote servers with incorrent vi settings.
+ * Generate keys outside of the /etc/puppet/files directory.
