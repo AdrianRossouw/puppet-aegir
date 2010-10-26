@@ -29,7 +29,7 @@ class aegir::hostmaster {
 
   exec { "provision-verify platform":
     cwd => "${aegir_home}",
-    command => "sudo -u$aegir_user ${aegir_home}/drush/drush @platform_hostmaster provision-verify",
+    command => "/usr/bin/sudo -u$aegir_user ${aegir_home}/drush/drush @platform_hostmaster provision-verify",
     require => [ Exec["provision-save platform"] ],
     environment => [ "HOME=$aegir_home" ],
     creates => "${aegir_home}/hostmaster-${aegir_version}",
@@ -60,7 +60,7 @@ class aegir::hostmaster {
 
   exec { "provision-install site":
     cwd => "${aegir_home}",
-    command => "sudo -u$aegir_user ${aegir_home}/drush/drush @hostmaster provision-install",
+    command => "/usr/bin/sudo -u$aegir_user ${aegir_home}/drush/drush @hostmaster provision-install",
     require => [ Exec["provision-save site"] ],
     environment => [ "HOME=$aegir_home" ],
     creates => "${aegir_home}/hostmaster-${aegir_version}/sites/$aegir_master/settings.php",
@@ -69,7 +69,7 @@ class aegir::hostmaster {
 
   exec { "provision-verify site":
     cwd => "${aegir_home}",
-    command => "sudo -u$aegir_user ${aegir_home}/drush/drush @hostmaster provision-verify",
+    command => "/usr/bin/sudo -u$aegir_user ${aegir_home}/drush/drush @hostmaster provision-verify",
     require => [ Exec["provision-install site"] ],
     environment => [ "HOME=$aegir_home" ],
     logoutput => true,
