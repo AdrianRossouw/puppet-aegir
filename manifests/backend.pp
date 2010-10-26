@@ -1,7 +1,6 @@
 # Install the Aegir backend - provision
 
 class aegir::backend {
-  Exec { path => '/usr/bin:/bin:/usr/sbin:/sbin' }
   include aegir::drush
   include aegir::db
   include aegir::http
