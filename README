@@ -1,0 +1,111 @@
+This only works on ubuntu (afaik) and depends on the line.pp from puppet-common.
+
+The reason this script exists, is to allow you to easily spawn entire new aegir instances (or stacks),
+which consist of a central backend server, with the optional front end, and then be able to very easily
+assign additional servers to act as remote servers for whichever services you intend to provide with it.
+
+USAGE:
+------
+
+To use this script you need to define some classes and nodes of your own that it in turn requires.
+This is done so that your actual configuration is entirely up to you (ie: custom php or apache, etc)
+
+1) Define the "includes" classes.
+---------------------------------
+The aegir classes will depend on these classes for policies to fulfill the specific roles
+it needs to perform. These are :
+
+  class aegir::includes::http {
+    // include your own class to add php apache / whatever
+  }
+
+  class aegir::includes::db {
+    // install mysql and configure the root password etc.
+  }
+
+  class aegir::includes::mail {
+    // install exim or whatever you use, so your server can send mail.
+  }
+
+  class aegir::includes::dns {
+    // if you are going to be installing bind, add your packages and services here.
+  }
+
+2) define a config class for your aegir stack.
+----------------------------------------------
+This is where you specify the settings that all servers on this stack will need to respect. 
+The $aegir_host is the $fqdn of the server that will be acting as the hostmaster or backend server.
+
+
+  class aegir_live::config inherits aegir::config {
+     # override default settings, required here are 
+     $aegir_host = 'full.hostname.of.server.com'
+
+     # PUBLIC ip address
+     $aegir_ip = '192.168.0.1'
+
+     # url of aegir site
+     $aegir_master = 'aegir.mydomain.com'
+
+     # mysql root password
+     $mysql_pass = 'dsfafsdadsgjfsad'
+
+     # enable SSL.
+     # If you enable this, all your web servers will have SSL enabled.
+     #$apache_ssl = true
+  }
+
+3) define a base node for the aegir stack
+-----------------------------------------
+This is a simple way to take the settings specific to this stack and pull them into scope.
+From now on, any node that inherits this node, will be part of that aegir stack. So you could
+have aegir_live, aegir_staging, aegir_test and so forth.
+
+  node aegir_live {
+    include aegir_live::config
+    $aegir_scope = 'aegir_live::config'
+  }
+
+4) define a hostmaster or backend for your stack
+------------------------------------------------
+This will do the necessary setup to get the system running. If you choose
+to install the front end, it will install the site as the $aegir_master url
+you configured in your config class from step 2.
+
+  node 'full.hostname.of.server.com' inherits aegir_live {
+     include aegir::hostmaster
+  }
+
+5) add additional servers to the stack. 
+---------------------------------------
+Now when you bring up a new server and point it at this puppet master,
+you will be able to assign it to an aegir stack, and assign certain roles
+to it. New servers will be automatically added to the hostmaster front
+end, and registered with the backend.
+
+  node 'external.db.server.com' inherits aegir_live {
+    include aegir::db
+  }
+
+  node 'external.web.server.com' inherits aegir_live {
+    include aegir::http
+  }
+
+  node 'external.dns.server.com inherits aegir_live {
+    # If you do this, you _must_ add it to your master server too.
+    include aegir::dns
+  }
+
+
+What isn't working?
+-------------------
+ * I'm not even convinced this works yet, as it hasnt been fully tested.
+ * Does not support upgrading Aegir. No ideas how to do this.
+ * Try not to depend on packages directly (really a sysadmin's decision), but need failsafes.
+ * Not cross platform. not really convinced i want to be. 
+ * Stop using the line function, and switch to using /etc/sudoers.d (possibly debian only)
+ * Doesn't support configuring the ports. I have no need for this.
+ * Doesn't support NGINX. I have no need for this.
+ * Docs and cleaning it up.
+ * Only supports Aegir HEAD atm because it needs the hosting-import command to add the servers
+   to the front end.

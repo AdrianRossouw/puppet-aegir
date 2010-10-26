@@ -17,7 +17,7 @@ class aegir::config {
   $aegir_db_user = 'aegir_root'
   $aegir_db_pass = 'a7vaKru0AQJ4Sb'
 
-  $aegir_version = '0.4-alpha14'
+  $aegir_version = 'HEAD'
   $drush_version = '6.x-3.3'
 
   $mysql_pass = "GQTInUA0n44Scp"
