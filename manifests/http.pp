@@ -62,7 +62,7 @@ class aegir::http {
 
   if $apache_ssl {
     exec { "enable apache openssl" :
-      command => "/user/sbin/a2enmod ssl",
+      command => "/usr/sbin/a2enmod ssl",
     }
     $service_type = 'apache_ssl'
 
