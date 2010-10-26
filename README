@@ -1,8 +1,13 @@
-This only works on ubuntu (afaik) and depends on the line.pp from puppet-common.
-
 The reason this script exists, is to allow you to easily spawn entire new aegir instances (or stacks),
 which consist of a central backend server, with the optional front end, and then be able to very easily
 assign additional servers to act as remote servers for whichever services you intend to provide with it.
+
+REQUIREMENTS:
+------------
+This only works on ubuntu (afaik) and depends on the line.pp from puppet-common.
+
+You need to set up exported resources on your puppet master, preferably with mysql
+as a back end.
 
 USAGE:
 ------
