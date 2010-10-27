@@ -37,14 +37,13 @@ class aegir::dns {
   }
   else {
     $s_alias = 'master'
-    exec { "enable dns feature" : 
+    @exec { "enable dns feature" : 
 			cwd => $aegir_home,
 			user => $aegir_user,
 			environment => [ "HOME=$aegir_home" ],
+      tag => 'hostmaster-features-enable',
 			group => $aegir_group,
 			command => "$aegir_home/drush/drush @hostmaster pm-enable hosting_dns -y",
-      require => Exec['provision-verify server'],
-			before => Exec['provision-verify site']
 		}
     $service_type = 'bind'
   }

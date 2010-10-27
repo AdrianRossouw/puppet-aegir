@@ -75,6 +75,11 @@ class aegir::hostmaster {
     logoutput => true,
   }
 
+  Exec <| tag == "hostmaster-features-enable" |> {
+    require => Exec['provision-verify site'],
+    before => Exec['provision-import server']
+  }
+
   exec { "provision-import server":
 						cwd => $aegir_home,
 						user => $aegir_user,
