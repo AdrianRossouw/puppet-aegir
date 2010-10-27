@@ -1,9 +1,9 @@
 # Install the Aegir backend - provision
 
 class aegir::backend {
-  include aegir::drush
-  include aegir::db
-  include aegir::http
+  require aegir::drush
+  require aegir::db
+  require aegir::http
 
   # we need some form of MTA to send welcome mails.
   require aegir::includes::mail
