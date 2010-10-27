@@ -117,7 +117,7 @@ mode => 600,
   exec { "provision-verify server":
     cwd => "${aegir_home}",
     command => "/usr/bin/sudo -u$aegir_user ${aegir_home}/drush/drush @server_master provision-verify",
-    require => [ File["provision"] ],
+    require => [ File["provision"], Exec["grant-aegir-access host"] ],
     environment => [ "HOME=$aegir_home" ],
     logoutput => true,
 
